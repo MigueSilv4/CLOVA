@@ -11,13 +11,13 @@ bp = Blueprint('producto', __name__)
 @bp.route('/producto/add', methods=['GET', 'POST'])
 def add():
     rol = current_user.rol 
-    if rol == "Administrador":
+    if rol == "Administrador":  
         if request.method == 'POST':
             try:
                 nombre = request.form['nombre']
                 precio = request.form['precio']
                 cantidad = request.form['cantidad']
-                categoria = request.form['categoria']
+                categoria_id = request.form['categoria_id']
                 imagen = request.files['imagen']
 
                 if imagen:
@@ -32,7 +32,7 @@ def add():
                     nombre=nombre, 
                     precio=precio, 
                     cantidad=cantidad,
-                    categoria=categoria, 
+                    categoria_id=categoria_id, 
                     imagen=filename
                 )
                 db.session.add(new_producto)
@@ -49,7 +49,7 @@ def add():
 
         dataC = Categoria.query.all()
 
-        return render_template('producto/add.html', dataC=dataC)
+        return render_template('administrador/producto.html', dataC=dataC)
     
     else:
         return redirect(url_for('auth.index'))

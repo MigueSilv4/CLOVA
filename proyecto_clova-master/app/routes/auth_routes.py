@@ -7,25 +7,30 @@ from app.models.producto import Producto
 
 bp = Blueprint('auth', __name__)
 
-@bp.route('/auth/index')
+@bp.route('/auth')
 def index():
     return render_template('inicio/index.html')
 
 @bp.route('/', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('auth.dashboard'))
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
         
-        if (usuario := Usuario.query.filter_by(email=email, password=password).first()):
+        usuario = Usuario.query.filter_by(email=email).first()
+        if usuario and usuario.password == password:  # Nota: Esta comparación no es segura, se debe usar hash
             login_user(usuario)
-            flash("Ingreso exitoso!", "success")
-            return redirect(url_for('categoria.index'))
-        
-        flash('Invalid credentials. Please try again.', 'danger')
+
+            if usuario.rol == "Usuario": # nota usuario agregar la ruta de usuario
+                return redirect(url_for(''))
+            elif usuario.rol == "Administrador": # nota Administrador
+                return redirect(url_for('admin.index'))
+            else:
+                flash('Credenciales inválidas. Por favor, intente nuevamente.', 'danger')
     
-    if current_user.is_authenticated:
-        return redirect(url_for('auth.dashboard'))
     return render_template("usuario/login.html")
 
 @bp.route('/auth/dashboard')

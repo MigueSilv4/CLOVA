@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    
+    <!-- ======= Styles ====== -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_admin.css') }}">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='productos.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">CLOVA</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Clientes</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="layers"></ion-icon>
+                        </span>
+                        <span class="title">Categorias</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('admin.producto') }}">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">Productos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="reader-outline"></ion-icon>
+                        </span>
+                        <span class="title">Inventario</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Configuraciones</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('auth.logout') }}">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Cerrar sesion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- =============== Main Content ================ -->
+        <div class="main">
+
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" id="searchInput" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="user">
+                </div>
+            </div>
+
+                <div class="details">
+                    <div class="recentOrders">
+                        <div class="cardHeader">
+                            <h2>Productos</h2>
+                            <p class="btn">Total = {{ totalP }}</p>
+                        </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Nombre</td>
+                                <td>Precio</td>
+                                <td>Cantidad</td>
+                                <td>Imágen</td>
+                                <td>Acciones</td>
+                            </tr>
+                        </thead>
+                        <tbody id="productTable">
+                            {% for producto in dataP %}
+                            <tr>
+                                <td>{{ producto.nombre }}</td>
+                                <td>${{ producto.precio }}00</td>
+                                <td>{{ producto.cantidad }}</td>
+                                <td>
+                                    {% for categoria in dataC %}
+                                        {% if categoria.id == producto.categoria %}
+                                            {{ categoria.nombre }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>    
+                                    <button class="btn-1" onclick="openModal('{{ url_for('static', filename='images/' ~ producto.imagen) }}', '{{ producto.nombre }}')" class="btn btn-primary btn-sm">Imagen</button>
+                                    <!-- <img src="{{ url_for('static', filename='images/' + producto.imagen) }}" alt="Producto" style="width: 100px; height: auto;">  -->
+                                </td>
+                                <td>
+                                    <div class="accion">
+                                        <button type="button" class="btn-warning" onclick="openEditModal('{{ producto.id }}', '{{ producto.nombre }}', '{{ producto.descripcion }}', '{{ producto.precio }}', '{{ producto.stock }}', '{{ producto.categoria_id }}', '{{ producto.imagen }}')">Editar</button>
+                                        <button type="button" class="btn-danger" onclick="openDeleteModal('{{ producto.id }}')">Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ================= Nuevo producto ================ -->
+                <div class="recentCustomers">
+                    <div class="cardHeader">
+                        <h2>Agregar producto</h2>
+                    </div>
+
+                    <div class="">
+                        <form class="add-producto" action="{{ url_for('producto.add')}}" method="POST" enctype="multipart/form-data">
+                            <input type="text" id="nombre" name="nombre" required placeholder="Nombre">
+                            <input type="number" id="precio" name="precio" required placeholder="Precio">
+                            <input type="number" id="cantidad" name="cantidad" required placeholder="Cantidad">
+                            <select id="categoria_id" name="categoria_id" aria-placeholder="Categoría">
+                                <option value="" selected>Seleccionar Categoria</option>
+                                {% for categoria in dataC %}
+                                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="file" id="imagen" name="imagen">
+                            <button class="btn-primary" type="submit">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- ================= Nuevo producto ================ -->
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal para confirmacion de eliminar producto-->
+    <div id="deleteModal" name="deleteModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h2>¿Estás seguro de que deseas eliminar este producto?</h2>
+            <p>Esta acción no se puede deshacer.</p>
+            <div class="accion-modal">               
+                <form id="deleteForm" action="" method="POST">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para confirmacion de eliminar producto-->
+    
+
+
+    <!-- Modal para mostrar la imagen del producto-->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="subtitulo-modal">
+                <h3 id="modalProductName"></h3>
+            </div>
+            <div id="gallery" class="gallery">
+                <img class="modal-content" id="modalImage">
+            </div>
+        </div>
+    </div>
+    <!-- Modal para mostrar la imagen del producto-->
+
+
+
+    <!-- Modal para editar producto-->
+    <div id="editModalProducto" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModalProducto()">&times;</span>
+            <h2 style="text-align: center;">Editar Producto</h2>
+            <form class="edit-producto" id="editFormProducto" action="" method="POST" enctype="multipart/form-data">
+                <input type="text" id="edit_nombre" name="nombre" placeholder="Nombre" required>
+                <textarea id="edit_descripcion" name="descripcion" placeholder="Descripcion" required></textarea>
+                <input type="number" id="edit_precio" name="precio" placeholder="Precio" required>
+                <input type="number" id="edit_stock" name="stock" placeholder="Stock" required>
+                <select id="edit_categoria" name="categoria" required>
+                    <option selected value="">Seleccionar categoria</option>
+                    {% for categoria in dataC %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <input type="file" id="edit_imagen" name="imagen">
+                <img id="imagen_actual" src="" alt="Imagen actual" style="display:none; max-width: 100px; max-height: 100px;">
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar cambios</button>
+                    <button type="button" class="btn-secondary" onclick="closeEditModalProducto()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal para editar producto-->
+
+
+    
+    <!-- =========== Scripts ========= -->
+     
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+
+
+</body>
+</html>
