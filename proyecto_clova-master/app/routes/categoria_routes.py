@@ -25,8 +25,6 @@ def add():
 
     return render_template('pruebas_categoria/add.html')
 
-
-
 @bp.route('/categoria/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     if current_user.rol == "Administrador":
@@ -35,7 +33,7 @@ def edit(id):
             categoria.nombre = request.form['nombre']
             db.session.commit()
             return redirect(url_for('categoria.index'))
-        return render_template('categoria/edit.html', categoria=categoria)
+        return render_template('pruebas_categoria/edit.html', categoria=categoria)
     else:
         return redirect(url_for('auth.index'))
     
