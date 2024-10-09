@@ -25,8 +25,6 @@ def add():
 
     return render_template('pruebas_categoria/add.html')
 
-
-
 @bp.route('/categoria/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     if current_user.rol == "Administrador":
