@@ -11,7 +11,7 @@ bp = Blueprint('auth', __name__)
 def index():
     return render_template('inicio/index.html')
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/auth/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
