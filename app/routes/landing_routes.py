@@ -8,18 +8,10 @@ from app import db
 import os
 
 
-bp = Blueprint('admin', __name__)
+bp = Blueprint('landing', __name__)
 
-@bp.route('/admin/index')
+@bp.route('/')
 def index():
- return render_template('administrador/index.html')
-
-@bp.route('/admin/producto')
-def producto():
- dataC = Categoria.query.all()
- dataP = Producto.query.all()
- return render_template('administrador/producto.html', dataP=dataP, dataC=dataC)
-
-
-
-
+    dataP=Producto.query.all()
+    dataC=Categoria.query.all()
+    return render_template('landing/index.html', dataP=dataP, dataC=dataC)

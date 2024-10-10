@@ -19,12 +19,14 @@ def create_app():
         from .models.usuario import Usuario
         return Usuario.query.get(int(user_id))
 
-    from app.routes import auth_routes, producto_routes, categoria_routes, admin_routes
+    from app.routes import auth_routes, producto_routes, categoria_routes, admin_routes, landing_routes
 
     app.register_blueprint(auth_routes.bp)
     app.register_blueprint(producto_routes.bp)
     app.register_blueprint(categoria_routes.bp)
     app.register_blueprint(admin_routes.bp)
+    app.register_blueprint(landing_routes.bp)
+
 
     @app.route('/')
     def principal():

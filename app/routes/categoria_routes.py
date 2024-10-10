@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
+import os, app
 from app import db
 from app.models.producto import Producto
 from app.models.categoria import Categoria
@@ -16,8 +18,25 @@ def index():
 def add():
     if request.method == 'POST':
         nombre = request.form['nombre']
+        imagen = request.files['imagen']
+
+        if imagen:
+            filename = secure_filename(imagen.filename)
+            imagen_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'images')
+            print(f"imagen dir ------- {imagen_dir}")
+            if not os.path.exists(imagen_dir):
+                os.makedirs(imagen_dir)  
+            imagen.save(os.path.join(imagen_dir, filename))
+            ruta_imagen = os.path.join('static', 'images', filename)
+            print(f"ruta de la imagen {ruta_imagen}")
+        else:
+            ruta_imagen = None
         
-        new_categoria = Categoria(nombre=nombre)
+        new_categoria = Categoria(
+            nombre=nombre,
+                    imagen=filename
+            )
+        
         db.session.add(new_categoria)
         db.session.commit()
         

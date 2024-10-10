@@ -10,7 +10,7 @@ bp = Blueprint('producto', __name__)
 
 @bp.route('/producto/add', methods=['GET', 'POST'])
 def add():
-    print("Entra al add")
+
     rol = current_user.rol 
     if rol == "Administrador":  
         if request.method == 'POST':
@@ -20,8 +20,6 @@ def add():
                 cantidad = request.form['cantidad']
                 categoria_id = request.form['categoria_id']
                 imagen = request.files['imagen']
-
-                print("toma los datos del add")
 
                 if imagen:
                     filename = secure_filename(imagen.filename)
@@ -33,9 +31,9 @@ def add():
                     imagen_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'images')
                     print(f"imagen dir ------- {imagen_dir}")
                     if not os.path.exists(imagen_dir):
-                        os.makedirs(imagen_dir)  # Crea el directorio si no existe
+                        os.makedirs(imagen_dir) 
                     imagen.save(os.path.join(imagen_dir, filename))
-                    ruta_imagen = os.path.join('static', 'images', filename)  # Ruta relativa para la base de datos o frontend
+                    ruta_imagen = os.path.join('static', 'images', filename) 
                     print(f"ruta de la imagen {ruta_imagen}")
                 else:
                     ruta_imagen = None
@@ -48,12 +46,8 @@ def add():
                     imagen=filename
                 )
 
-                print("antes del db session")
-
                 db.session.add(new_producto)
                 db.session.commit()
-
-                print("se guarda")
 
 
                 flash("Producto guardado con éxito", "success")
@@ -72,7 +66,6 @@ def add():
     else:
         return redirect(url_for('auth.index'))
     
-
 
 
 @bp.route('/producto/edit/<int:id>', methods=['GET', 'POST'])

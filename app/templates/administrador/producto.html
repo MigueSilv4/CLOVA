@@ -125,6 +125,7 @@
                                 <td>Nombre</td>
                                 <td>Precio</td>
                                 <td>Cantidad</td>
+                                <td>Categoria</td>
                                 <td>Imágen</td>
                                 <td>Acciones</td>
                             </tr>
@@ -135,9 +136,9 @@
                                 <td>{{ producto.nombre }}</td>
                                 <td>${{ producto.precio }}00</td>
                                 <td>{{ producto.cantidad }}</td>
-                                <td>
+                                <td style="text-align: center;">
                                     {% for categoria in dataC %}
-                                        {% if categoria.id == producto.categoria %}
+                                        {% if categoria.id == producto.categoria_id %}
                                             {{ categoria.nombre }}
                                         {% endif %}
                                     {% endfor %}

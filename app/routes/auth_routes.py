@@ -13,9 +13,6 @@ def register():
         nombre = request.form.get('nombre')
         email = request.form.get('email')
         password = request.form.get('password')
-
-        print(nombre)
-
         
         if Usuario.query.filter_by(email=email).first():
             flash('El correo electrónico ya está registrado.', 'danger')
@@ -44,25 +41,20 @@ def login():
         password = request.form['password']
         
         try:
-            # Busca el usuario por su email
             usuario = Usuario.query.filter_by(email=email).first()
             
-            # Si no se encuentra el usuario
             if not usuario:
                 flash('El correo electrónico no está registrado.', 'danger')
                 return redirect(url_for('auth.login'))
 
-            # Verifica la contraseña con hash
             if usuario.password != password :
                 flash('La contraseña es incorrecta.', 'danger')
                 return redirect(url_for('auth.login'))
 
-            # Si el email y la contraseña son correctos
             login_user(usuario)
             
-            # Redirección según el rol del usuario
             if usuario.rol == "Usuario":
-                return redirect(url_for('user.dashboard'))  # Cambia a la ruta correcta del usuario
+                return redirect(url_for('landing.index'))  
             elif usuario.rol == "Administrador":
                 return redirect(url_for('admin.index'))
             else:
@@ -76,12 +68,10 @@ def login():
     return render_template("usuario/login.html")
 
 @bp.route('/auth/dashboard')
-@login_required
 def dashboard():    
     return redirect(url_for('categoria.index'))
 
 @bp.route('/logout')
-@login_required
 def logout():
     logout_user()
     flash('Has cerrado sesion.', 'danger')
