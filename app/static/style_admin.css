@@ -700,3 +700,75 @@ body {
   }
 }
 
+/* Estilos generales para el contenedor de alertas */
+.alert-container {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  }
+
+  /* Estilos generales para las alertas */
+  .alert {
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.5s ease;
+  }
+
+  /* Animación para que las alertas entren suavemente */
+  @keyframes slideIn {
+  from {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  }
+
+  /* Botón de cierre de la alerta */
+  .btn-close {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  }
+
+  /* Estilos para las alertas según la categoría */
+  .alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  }
+
+  .alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  }
+
+  .alert-warning {
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  color: #856404;
+  }
+
+  .alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+  }
+
+
