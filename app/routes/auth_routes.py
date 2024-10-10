@@ -86,3 +86,14 @@ def logout():
     logout_user()
     flash('Has cerrado sesion.', 'danger')
     return redirect(url_for('auth.login'))
+
+@bp.route('/auth/deleteUsuario/<int:id>', methods=['POST'])
+def delete(id):
+        if current_user.rol == "Administrador":
+            usuario = Usuario.query.get_or_404(id)
+            
+            db.session.delete(usuario)
+            db.session.commit()
+            flash('El usuario se eliminó exitosamente', 'info')
+
+            return redirect(url_for('admin.clientes'))

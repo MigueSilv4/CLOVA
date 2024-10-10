@@ -12,13 +12,26 @@ bp = Blueprint('admin', __name__)
 
 @bp.route('/admin')
 def index():
- return render_template('administrador/index.html')
+ dataU = Usuario.query.all()
+ tamañoU = len(dataU)
+ dataC = Categoria.query.all()
+ tamañoC = len(dataC)
+ dataP = Producto.query.all()
+ tamañoP = len(dataP)
+ return render_template('administrador/index.html', tamañoU=tamañoU, dataU=dataU, dataC=dataC, tamañoC=tamañoC, dataP=dataP, tamañoP=tamañoP)
 
 @bp.route('/admin/producto')
 def producto():
  dataC = Categoria.query.all()
  dataP = Producto.query.all()
  return render_template('administrador/producto.html', dataP=dataP, dataC=dataC)
+
+@bp.route('/admin/clientes')
+def clientes():
+    dataU = Usuario.query.all()
+    usuario = current_user
+
+    return render_template('administrador/cliente.html', dataU=dataU, usuario=usuario)
 
 
 
