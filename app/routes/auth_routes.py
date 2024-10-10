@@ -54,8 +54,10 @@ def login():
             login_user(usuario)
             
             if usuario.rol == "Usuario":
+                flash(f'Bienvenido, {usuario.nombre}!', 'success')
                 return redirect(url_for('landing.index'))  
             elif usuario.rol == "Administrador":
+                flash(f'Bienvenido administrador, {usuario.nombre}!', 'success')
                 return redirect(url_for('admin.index'))
             else:
                 flash('Rol no autorizado.', 'danger')
@@ -75,7 +77,7 @@ def dashboard():
 def logout():
     logout_user()
     flash('Has cerrado sesion.', 'danger')
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('landing.index'))
 
 @bp.route('/auth/deleteUsuario/<int:id>', methods=['POST'])
 def delete(id):
