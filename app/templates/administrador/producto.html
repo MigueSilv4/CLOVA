@@ -211,16 +211,15 @@
             <h2 style="text-align: center;">Editar Producto</h2>
             <form class="edit-producto" id="editFormProducto" action="" method="POST" enctype="multipart/form-data">
                 <input type="text" id="edit_nombre" name="nombre" placeholder="Nombre" required>
-                <textarea id="edit_descripcion" name="descripcion" placeholder="Descripcion" required></textarea>
                 <input type="number" id="edit_precio" name="precio" placeholder="Precio" required>
-                <input type="number" id="edit_stock" name="stock" placeholder="Stock" required>
-                <select id="edit_categoria" name="categoria" required>
+                <input type="number" id="edit_cantidad" name="cantidad" placeholder="cantidad" required>
+                <select id="edit_categoria_id" name="categoria_id" required>
                     <option selected value="">Seleccionar categoria</option>
                     {% for categoria in dataC %}
                     <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
                     {% endfor %}
                 </select>
-                <input type="file" id="edit_imagen" name="imagen">
+                <input type="file" id="imagen_actual" name="imagen">
                 <img id="imagen_actual" src="" alt="Imagen actual" style="display:none; max-width: 100px; max-height: 100px;">
                 <div class="form-actions">
                     <button type="submit" class="btn-primary">Guardar cambios</button>

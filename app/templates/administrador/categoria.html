@@ -109,6 +109,7 @@
                             <tr>
                                 <td>N° unico</td>
                                 <td>Nombre: </td>
+                                <td>Imagen: </td>
                                 <td>Productos asociados: </td>
 
                                 <td>Acciones</td>
@@ -117,17 +118,21 @@
                         <tbody id="productTable">
                             {% for categoria in dataC %}
                             <tr>
-                                <td>{{ categoria.id }}</td>
+                                <td style="text-align: center;">{{ categoria.id }}</td>
                                 <td>{{ categoria.nombre }}</td>
-                                <td><button type="button" class="btn-1" onclick="openCategoryProductsModal('{{ categoria.id }}')">Ver Productos</button></td>
+                                <td>    
+                                    <button class="btn-1" onclick="openModal('{{ url_for('static', filename='images/' ~ categoria.imagen) }}', '{{ categoria.nombre }}')" class="btn btn-primary btn-sm">Imagen</button>
+                                    <!-- <img src="{{ url_for('static', filename='images/' + categoria.imagen) }}" alt="Categoria" style="width: 100px; height: auto;">  -->
+                                </td>
+                                <td style="text-align: center;"                                                                                                                                                                                                                                                 ><button type="button" class="btn-1" onclick="openCategoryProductsModal('{{ categoria.productos }}')">Ver Productos</button></td>
                                 <td>
                                     <div class="accion">
-                                        <button type="button" class="btn-warning" onclick="openEditModalCategoria('{{ categoria.id }}', '{{ categoria.nombre }}')">Editar</button>
+                                        <button type="button" class="btn-warning" onclick="openEditModalCategoria('{{ categoria.id }}', '{{ categoria.nombre }}', '{{ categoria.imagen }}')">Editar</button>                                                                                                                                    
                                         <button type="button" class="btn-danger" onclick="openDeleteModalCategoria('{{ categoria.id }}')">Eliminar</button>
                                     </div>
                                 </td>
                             </tr>
-                            {% endfor %}
+                            {% endfor %}                                    
                         </tbody>
                     </table>
                 </div>
@@ -177,6 +182,7 @@
             <h2>Editar Categoría</h2>
             <form class="edit-producto" id="editFormCategoria" action="" method="POST">
                 <input type="text" id="edit_categoria_nombre" name="nombre" placeholder="Nombre" required>
+                <input type="file" id="imagen_actual" name="imagen" placeholder="imagen" required>
                 <div class="form-actions">
                     <button type="submit" class="btn-primary">Guardar cambios</button>
                     <button type="button" class="btn-secondary" onclick="closeEditModalCategoria()">Cancelar</button>

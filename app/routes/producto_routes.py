@@ -80,7 +80,7 @@ def edit(id):
         dataP.nombre = request.form['nombre']
         dataP.precio = request.form['cantidad']
         dataP.cantidad = request.form['cantidad']
-        dataP.categoria = request.form['categoria']
+        dataP.categoria_id = request.form['categoria_id']
         imagen = request.files['imagen']
 
         if imagen:
@@ -91,7 +91,7 @@ def edit(id):
 
         db.session.commit()
         flash('Producto actualizado con éxito', 'success')
-        return redirect(url_for('producto.index'))
+        return redirect(url_for('admin.producto'))
     
 
 
@@ -105,9 +105,9 @@ def delete(id):
             db.session.delete(producto)
             db.session.commit()
             flash('Producto eliminado con éxito', 'success')
-            return redirect(url_for('producto.tabla'))
+            return redirect(url_for('admin.producto'))
         else:
             return redirect(url_for('auth.index'))
     except:
         flash('El producto no se puede eliminar porque se está usando el registro en otras tablas', 'danger')
-        return redirect(url_for('producto.tabla'))
+        return redirect(url_for('admin.producto'))

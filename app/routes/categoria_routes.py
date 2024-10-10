@@ -10,7 +10,7 @@ bp = Blueprint('categoria', __name__)
 
 @bp.route('/categoria/index')
 def index():
-    dataC=Categoria.query.all()
+    dataC = Categoria.query.all()
     return render_template('administrador/categoria.html', dataC=dataC)   
 
 
@@ -50,6 +50,7 @@ def edit(id):
         categoria = Categoria.query.get_or_404(id)
         if request.method == 'POST':
             categoria.nombre = request.form['nombre']
+            categoria.imagen = request.form['imagen']
             db.session.commit()
             return redirect(url_for('categoria.index'))
         return render_template('administrador/categoria.html', categoria=categoria)
