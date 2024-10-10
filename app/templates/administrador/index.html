@@ -37,7 +37,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('admin.clientes') }}">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -46,7 +46,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('categoria.index') }}">
                         <span class="icon">
                             <ion-icon name="layers"></ion-icon>
                         </span>
@@ -60,24 +60,6 @@
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
                         <span class="title">Productos</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="reader-outline"></ion-icon>
-                        </span>
-                        <span class="title">Inventario</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Configuraciones</span>
                     </a>
                 </li>
 
@@ -116,7 +98,7 @@
                 <div class="card">
                     <div>
                         <div class="numbers">{{ tamañoU }}</div>
-                        <div class="cardName">Clientes registrados</div>
+                        <div class="cardName">Usuarios registrados</div>
                     </div>
 
                     <div class="iconBx">
@@ -126,8 +108,8 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">888</div>
-                        <div class="cardName">Ventas</div>
+                        <div class="numbers">{{ tamañoC }}</div>
+                        <div class="cardName">Categorias guardadas</div>
                     </div>
 
                     <div class="iconBx">
@@ -137,8 +119,8 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">284</div>
-                        <div class="cardName">Comentarios</div>
+                        <div class="numbers">{{ tamañaP }}</div>
+                        <div class="cardName">Productos registrados</div>
                     </div>
 
                     <div class="iconBx">
@@ -218,17 +200,17 @@
                 <!-- ================= New Customers ================ -->
                 <div class="recentCustomers">
                     <div class="cardHeader">
-                        <h2>Clientes recientes</h2>
+                        <h2>Usuario recientes</h2>
                     </div>
 
-                    <table>
+                    <table id="productTable">
                     {% for dataU in dataU %}
                     <tr>
                         <td width="60px">
-                            <div class="imgBx"><img src="{{ dataU.imagen }}" alt=""></div>
+                            <div class="imgBx"><img src="../../static/images/icono persona.jpg" alt=""></div>
                         </td>
                             <td>
-                            <h4>{{ dataU.nombre }}<br> <span>{{dataU.ciudad}} - {{ dataU.departamento }}</span></h4>
+                            <h4>{{ dataU.nombre }}<br> <span>{{dataU.email}}</span></h4>
                         </td>
                     </tr>
                     {% endfor %}
