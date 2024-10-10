@@ -1,11 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
+from flask import Blueprint, render_template
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from app.models.producto import Producto
 from app.models.categoria import Categoria
 from app.models.usuario import Usuario
-
-
 from app import db
 import os
 
