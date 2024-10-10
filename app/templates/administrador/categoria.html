@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <title>Admin Dashboard</title>
     
     <!-- ======= Styles ====== -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
@@ -15,13 +15,14 @@
 </head>
 
 <body>
+    <!-- =============== Navigation ================ -->
     <div class="container">
         <div class="navigation">
             <ul>
                 <li>
                     <a href="{{ url_for('admin.index') }}">
                         <span class="icon">
-                            <ion-icon name="cart-outline"></ion-icon>
+                            <ion-icon name="flash"></ion-icon>
                         </span>
                         <span class="title">CLOVA</span>
                     </a>
@@ -94,6 +95,7 @@
 
 
         <!-- =============== Main Content ================ -->
+
         <div class="main">
 
             <div class="topbar">
@@ -103,53 +105,43 @@
 
                 <div class="search">
                     <label>
-                        <input type="text" id="searchInput" placeholder="Search here">
+                        <input type="text"id="searchInput" placeholder="Search here">
                         <ion-icon name="search-outline"></ion-icon>
                     </label>
                 </div>
 
                 <div class="user">
+                
                 </div>
             </div>
 
-                <div class="details">
-                    <div class="recentOrders">
-                        <div class="cardHeader">
-                            <h2>Productos</h2>
-                            <p class="btn">Total = {{ totalP }}</p>
-                        </div>
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Categorias</h2>
+                        <a href="" class="btn">Total = {{ totalC }}</a>
+                    </div>
 
                     <table>
                         <thead>
                             <tr>
-                                <td>Nombre</td>
-                                <td>Precio</td>
-                                <td>Cantidad</td>
-                                <td>Imágen</td>
+                                <td>ID Categorias</td>
+                                <td>Nombre: </td>
+                                <td>Productos asociados: </td>
+
                                 <td>Acciones</td>
                             </tr>
                         </thead>
                         <tbody id="productTable">
-                            {% for producto in dataP %}
+                            {% for categoria in dataC %}
                             <tr>
-                                <td>{{ producto.nombre }}</td>
-                                <td>${{ producto.precio }}00</td>
-                                <td>{{ producto.cantidad }}</td>
-                                <td>
-                                    {% for categoria in dataC %}
-                                        {% if categoria.id == producto.categoria %}
-                                            {{ categoria.nombre }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                                <td>    
-                                    <button class="btn-1" onclick="openModal('{{ url_for('static', filename='images/' ~ producto.imagen) }}', '{{ producto.nombre }}')" class="btn btn-primary btn-sm">Imagen</button>
-                                    <!-- <img src="{{ url_for('static', filename='images/' + producto.imagen) }}" alt="Producto" style="width: 100px; height: auto;">  -->
-                                </td>
+                                <td>{{ categoria.id }}</td>
+                                <td>{{ categoria.nombre }}</td>
+                                <td><button type="button" class="btn-1" onclick="openCategoryProductsModal('{{ categoria.id }}')">Ver Productos</button></td>
                                 <td>
                                     <div class="accion">
-                                        <button type="button" class="btn-warning" onclick="openEditModal('{{ producto.id }}', '{{ producto.nombre }}', '{{ producto.descripcion }}', '{{ producto.precio }}', '{{ producto.stock }}', '{{ producto.categoria_id }}', '{{ producto.imagen }}')">Editar</button>
-                                        <button type="button" class="btn-danger" onclick="openDeleteModal('{{ producto.id }}')">Eliminar</button>
+                                        <button type="button" class="btn-warning" onclick="openEditModalCategoria('{{ categoria.id }}', '{{ categoria.nombre }}')">Editar</button>
+                                        <button type="button" class="btn-danger" onclick="openDeleteModalCategoria('{{ categoria.id }}')">Eliminar</button>
                                     </div>
                                 </td>
                             </tr>
@@ -158,58 +150,65 @@
                     </table>
                 </div>
 
-                <!-- ================= Nuevo producto ================ -->
+                <!-- ================= New Category ================ -->
                 <div class="recentCustomers">
                     <div class="cardHeader">
-                        <h2>Agregar producto</h2>
+                        <h2>Agregar categoria</h2>
                     </div>
 
                     <div class="">
-                        <form class="add-producto" action="{{ url_for('producto.add')}}" method="POST" enctype="multipart/form-data">
+                        <form class="add-producto" action="{{ url_for('categoria.add')}}" method="POST" enctype="multipart/form-data">
                             <input type="text" id="nombre" name="nombre" required placeholder="Nombre">
-                            <input type="number" id="precio" name="precio" required placeholder="Precio">
-                            <input type="number" id="cantidad" name="cantidad" required placeholder="Cantidad">
-                            <select id="categoria_id" name="categoria_id" aria-placeholder="Categoría">
-                                <option value="" selected>Seleccionar Categoria</option>
-                                {% for categoria in dataC %}
-                                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-                                {% endfor %}
-                            </select>
-                            <input type="file" id="imagen" name="imagen">
                             <button class="btn-primary" type="submit">Guardar</button>
                         </form>
                     </div>
                 </div>
-                <!-- ================= Nuevo producto ================ -->
-
             </div>
         </div>
+         
     </div>
 
 
-    <!-- Modal para confirmacion de eliminar producto-->
-    <div id="deleteModal" name="deleteModal" class="modal" style="display:none;">
+    <!-- Modal para confirmación de eliminar categoría -->
+    <div id="deleteModalCategoria" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeDeleteModal()">&times;</span>
-            <h2>¿Estás seguro de que deseas eliminar este producto?</h2>
+            <span class="close" onclick="closeDeleteModalCategoria()">&times;</span>
+            <h2>¿Estás seguro de que deseas eliminar esta categoría?</h2>
             <p>Esta acción no se puede deshacer.</p>
-            <div class="accion-modal">               
-                <form id="deleteForm" action="" method="POST">
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+            <div class="accion-modal">
+                <form id="deleteFormCategoria" action="" method="POST">
+                    <button type="submit" class="btn-danger">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="closeDeleteModalCategoria()">Cancelar</button>
                 </form>
             </div>
         </div>
     </div>
-    <!-- Modal para confirmacion de eliminar producto-->
-    
+    <!-- Modal para confirmación de eliminar categoría -->
+
+
+
+    <!-- Modal para confirmación de editar categoria -->
+    <div id="editModalCategoria" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModalCategoria()">&times;</span>
+            <h2>Editar Categoría</h2>
+            <form class="edit-producto" id="editFormCategoria" action="" method="POST">
+                <input type="text" id="edit_categoria_nombre" name="nombre" placeholder="Nombre" required>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar cambios</button>
+                    <button type="button" class="btn-secondary" onclick="closeEditModalCategoria()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal para confirmación de editar categoria -->
 
 
     <!-- Modal para mostrar la imagen del producto-->
     <div id="imageModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <div class="subtitulo-modal">
+            <div class="subtitulo-modal" style="display: none;">
                 <h3 id="modalProductName"></h3>
             </div>
             <div id="gallery" class="gallery">
@@ -218,40 +217,38 @@
         </div>
     </div>
     <!-- Modal para mostrar la imagen del producto-->
+     
 
 
-
-    <!-- Modal para editar producto-->
-    <div id="editModalProducto" class="modal">
+    <!-- Modal para mostrar la tabla de productos asociados-->
+    <div id="categoryProductsModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeEditModalProducto()">&times;</span>
-            <h2 style="text-align: center;">Editar Producto</h2>
-            <form class="edit-producto" id="editFormProducto" action="" method="POST" enctype="multipart/form-data">
-                <input type="text" id="edit_nombre" name="nombre" placeholder="Nombre" required>
-                <textarea id="edit_descripcion" name="descripcion" placeholder="Descripcion" required></textarea>
-                <input type="number" id="edit_precio" name="precio" placeholder="Precio" required>
-                <input type="number" id="edit_stock" name="stock" placeholder="Stock" required>
-                <select id="edit_categoria" name="categoria" required>
-                    <option selected value="">Seleccionar categoria</option>
-                    {% for categoria in dataC %}
-                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-                    {% endfor %}
-                </select>
-                <input type="file" id="edit_imagen" name="imagen">
-                <img id="imagen_actual" src="" alt="Imagen actual" style="display:none; max-width: 100px; max-height: 100px;">
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">Guardar cambios</button>
-                    <button type="button" class="btn-secondary" onclick="closeEditModalProducto()">Cancelar</button>
+            <span class="close" onclick="closeCategoryProductsModal()">&times;</span>
+            <h2>Productos Asociados a la Categoría</h2>
+            <div class="details-2">
+                <div class="recentOrders" id="modalBodyProductos">
+                    <table id="productosTable">
+                        <thead>
+                            <tr>
+                                <td>Nombre</td>
+                                <td>Precio</td>
+                                <td>Stock</td>
+                                <td>Imagen</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los productos se mostraran aca aquí -->
+                        </tbody>
+                    </table>
                 </div>
-            </form>
+            </div>
+            <button type="button" class="btn-secondary" onclick="closeCategoryProductsModal()">Cerrar</button>
         </div>
     </div>
-    <!-- Modal para editar producto-->
+    <!-- Modal para mostrar la tabla de productos asociados-->
 
 
-    
     <!-- =========== Scripts ========= -->
-     
     <script src="{{ url_for('static', filename='js/search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -260,6 +257,6 @@
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
 
-
 </body>
+
 </html>

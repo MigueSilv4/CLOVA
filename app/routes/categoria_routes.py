@@ -9,7 +9,7 @@ bp = Blueprint('categoria', __name__)
 @bp.route('/categoria/index')
 def index():
     dataC=Categoria.query.all()
-    return render_template('pruebas_categoria/mostrar.html', dataC=dataC)
+    return render_template('administrador/categoria.html', dataC=dataC)   
 
 
 @bp.route('/categoria/add', methods=['GET', 'POST'])
@@ -23,7 +23,7 @@ def add():
         
         return redirect(url_for('categoria.index'))
 
-    return render_template('pruebas_categoria/add.html')
+    return render_template('administrador/categoria.html')
 
 @bp.route('/categoria/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
@@ -33,7 +33,7 @@ def edit(id):
             categoria.nombre = request.form['nombre']
             db.session.commit()
             return redirect(url_for('categoria.index'))
-        return render_template('pruebas_categoria/edit.html', categoria=categoria)
+        return render_template('administrador/categoria.html', categoria=categoria)
     else:
         return redirect(url_for('auth.index'))
     
