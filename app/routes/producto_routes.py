@@ -10,6 +10,7 @@ bp = Blueprint('producto', __name__)
 
 @bp.route('/producto/add', methods=['GET', 'POST'])
 def add():
+    print("Entra al add")
     rol = current_user.rol 
     if rol == "Administrador":  
         if request.method == 'POST':
@@ -20,11 +21,22 @@ def add():
                 categoria_id = request.form['categoria_id']
                 imagen = request.files['imagen']
 
+                print("toma los datos del add")
+
                 if imagen:
                     filename = secure_filename(imagen.filename)
-                    imagen_path = os.path.join('static', 'images', filename)
-                    imagen.save(os.path.join(os.path.dirname(__file__), '..', imagen_path))
-                    ruta_imagen = imagen_path
+                    # imagen_path = os.path.join('static', 'images', filename)
+                    # print(f"path {imagen_path}")
+                    # imagen.save(os.path.join(os.path.dirname(__file__), '..', imagen_path))
+                    # print(f"os jon {os.path.dirname(__file__)}")
+                    # ruta_imagen = imagen_path
+                    imagen_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'images')
+                    print(f"imagen dir ------- {imagen_dir}")
+                    if not os.path.exists(imagen_dir):
+                        os.makedirs(imagen_dir)  # Crea el directorio si no existe
+                    imagen.save(os.path.join(imagen_dir, filename))
+                    ruta_imagen = os.path.join('static', 'images', filename)  # Ruta relativa para la base de datos o frontend
+                    print(f"ruta de la imagen {ruta_imagen}")
                 else:
                     ruta_imagen = None
 
@@ -35,14 +47,20 @@ def add():
                     categoria_id=categoria_id, 
                     imagen=filename
                 )
+
+                print("antes del db session")
+
                 db.session.add(new_producto)
                 db.session.commit()
 
+                print("se guarda")
+
+
                 flash("Producto guardado con éxito", "success")
-                return redirect(url_for('producto.index'))
+                return redirect(url_for('admin.producto'))
             
             except Exception as e:
-
+                print(f"exception {e}")
                 flash(f"Ocurrió un error: {str(e)}", "danger")
                 return redirect(url_for('producto.add'))
 
