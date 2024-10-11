@@ -79,6 +79,33 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+.no-productos {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.no-productos h4{
+  text-shadow:0 7px 25px rgba(0, 0, 0, 0.5);;
+}
+
+.section {
+  background-color: #ecececda;
+}
+
+/* Estilos generales para el contenedor de alertas */
+.alert-container {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  }
+
 /* Estilos generales para las alertas */
 .alert {
   padding: 15px 20px;
@@ -100,6 +127,23 @@
       transform: translateY(0);
   }
   }
+
+  /* Animación para desvanecer la alerta */
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Aplicando la animación para que desaparezca después de 5 segundos */
+.alert {
+  animation: slideIn 0.4s ease, slideOut 0.4s ease 3s forwards;
+}
 
   /* Botón de cierre de la alerta */
   .btn-close {
@@ -138,12 +182,12 @@
   }
 
 .header h1{
-  text-shadow:0 7px 25px rgba(0, 0, 0, 0.5);;
+  text-shadow:0 7px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* Iconos del footer */
 .icons-footer {
-  background-color: rgba(192, 192, 192, 0.582);
+  background-color: rgba(255, 255, 255, 0.87);
   color: rgba(33, 37, 41);
   padding: 5px 9px;
   border-radius: 100%;
@@ -3824,6 +3868,9 @@ textarea.form-control-lg {
   align-items: center;
   justify-content: space-between;
   padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
+  position: sticky;
+  top: 0; /* Se queda pegado a la parte superior */
+  z-index: 1030; /* Asegura que esté por encima de otros elementos */
 }
 .navbar > .container,
 .navbar > .container-fluid,
@@ -4248,6 +4295,7 @@ textarea.form-control-lg {
   background-clip: border-box;
   border: var(--bs-card-border-width) solid var(--bs-card-border-color);
   border-radius: var(--bs-card-border-radius);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .card > hr {
   margin-right: 0;

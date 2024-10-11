@@ -17,11 +17,13 @@
 
         <style>
             .header{
-                background-image: url("{{ url_for('static', filename='images/' + cat.imagen) }}");
+                background-image: url("{{ url_for('static', filename='images/' + cat.imagen) }}"); 
+                background-repeat: no-repeat;
+                background-position: center; 
               }
 
             footer{
-            background-image: url("{{ url_for('static', filename='images/' + cat.imagen) }}");
+                background-color: black ;
             }
         </style>
 
@@ -81,11 +83,11 @@
 
 
         <!-- Section-->
-        <section class="py-5">
+        <section class="section py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <h2 class="mb-5" style="text-align: center;font-size: 45px;">Productos</h2>
+                {% if products %}
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-
                     {% for product in products %} 
                     <div class="col mb-5">
                         <div class="card h-100">
@@ -115,7 +117,12 @@
                         </div>
                     </div>
                     {% endfor %}
+                {% else %}
+                    <div class="no-productos">
+                        <h4>No hay productos disponibles en este momento.</h4>
+                    </div>
                 </div>
+                {% endif %}
             </div>
         </section>
 
